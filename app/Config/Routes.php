@@ -21,4 +21,9 @@ $routes->group('api/v1', ['namespace' => ''], static function ($routes) {
         'proposal/(:num)/submit',
         [ProposalWorkflowController::class, 'submit']
     );
+
+    $routes->get(
+        'proposal/(:num)/auditoria',
+        [ProposalController::class, 'audit']
+    );
 });

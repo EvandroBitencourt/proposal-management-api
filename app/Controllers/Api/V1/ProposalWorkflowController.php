@@ -5,6 +5,7 @@ namespace App\Controllers\Api\V1;
 use App\Controllers\BaseController;
 use App\Models\ProposalModel;
 use CodeIgniter\HTTP\ResponseInterface;
+use App\Services\ProposalAuditService;
 
 class ProposalWorkflowController extends BaseController
 {
@@ -39,6 +40,15 @@ class ProposalWorkflowController extends BaseController
             'status'  => ProposalModel::STATUS_SUBMITTED,
             'version' => $proposal['version'] + 1,
         ]);
+
+        ProposalAuditService::log(
+            $id,
+            'STATUS_CHANGED',
+            [
+                'from' => ProposalModel::STATUS_DRAFT,
+                'to'   => ProposalModel::STATUS_SUBMITTED,
+            ]
+        );
 
         return $this->response->setJSON([
             'id'     => $id,

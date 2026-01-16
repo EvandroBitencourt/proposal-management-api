@@ -151,4 +151,16 @@ class ProposalController extends ResourceController
 
         return $this->respondDeleted();
     }
+
+    public function audit($id)
+    {
+        $auditModel = new \App\Models\ProposalAuditModel();
+
+        return $this->respond(
+            $auditModel
+                ->where('proposal_id', $id)
+                ->orderBy('created_at', 'DESC')
+                ->findAll()
+        );
+    }
 }
