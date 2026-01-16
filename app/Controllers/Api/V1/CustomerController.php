@@ -95,7 +95,19 @@ class CustomerController extends ResourceController
      */
     public function update($id = null)
     {
-        //
+        $rules = (new CustomerValidation)->getRules($id);
+
+        if (!$this->validate($rules)) {
+            return $this->failValidationErrors($this->validator->getErrors());
+        }
+
+        $inputRequest = esc($this->request->getJSON(assoc: true));
+
+        $this->model->update($id, $inputRequest);
+
+        $customer = $this->model->find($id);
+
+        return $this->respondUpdated(data: $customer, message: 'Atualizado com sucesso!');
     }
 
     /**
@@ -107,6 +119,14 @@ class CustomerController extends ResourceController
      */
     public function delete($id = null)
     {
-        //
+        $customer = $this->model->find($id);
+
+        if ($customer === null) {
+            return $this->failNotFound(code: ResponseInterface::HTTP_NOT_FOUND);
+        }
+
+        $this->model->delete($id);
+
+        return $this->respondDeleted();
     }
 }

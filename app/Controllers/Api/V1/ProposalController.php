@@ -108,7 +108,28 @@ class ProposalController extends ResourceController
      */
     public function update($id = null)
     {
-        //
+        $proposal = $this->model->find($id);
+
+        if ($proposal === null) {
+            return $this->failNotFound(code: ResponseInterface::HTTP_NOT_FOUND);
+        }
+
+        $rules = (new ProposalValidation)->getRules($id);
+
+        if (!$this->validate($rules)) {
+            return $this->failValidationErrors($this->validator->getErrors());
+        }
+
+        $inputRequest = esc($this->request->getJSON(assoc: true));
+
+        $this->model->update($id, $inputRequest);
+
+        $proposalUpdated = $this->model->find($id);
+
+        return $this->respondUpdated(
+            data: $proposalUpdated,
+            message: 'Atualizado com sucesso!'
+        );
     }
 
     /**
@@ -120,6 +141,14 @@ class ProposalController extends ResourceController
      */
     public function delete($id = null)
     {
-        //
+        $proposal = $this->model->find($id);
+
+        if ($proposal === null) {
+            return $this->failNotFound(code: ResponseInterface::HTTP_NOT_FOUND);
+        }
+
+        $this->model->delete($id);
+
+        return $this->respondDeleted();
     }
 }

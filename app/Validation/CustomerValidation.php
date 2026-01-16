@@ -4,7 +4,7 @@ namespace App\Validation;
 
 class CustomerValidation
 {
-    public function getRules(): array
+    public function getRules(?int $id = null): array
     {
         return [
             'name' => [
@@ -17,7 +17,7 @@ class CustomerValidation
 
             'email' => [
                 'label' => 'E-mail',
-                'rules' => 'required|valid_email|max_length[255]|is_unique[customer.email]',
+                'rules' => "required|valid_email|max_length[255]|is_unique[customer.email,id,{$id}]",
                 'errors' => [
                     'required'    => 'O e-mail é obrigatório.',
                     'valid_email' => 'Informe um e-mail válido.',
