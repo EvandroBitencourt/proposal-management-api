@@ -3,6 +3,7 @@
 namespace App\Controllers\Api\V1;
 
 use App\Models\ProposalModel;
+use App\Validation\ProposalValidation;
 use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\RESTful\ResourceController;
 
@@ -64,6 +65,12 @@ class ProposalController extends ResourceController
      */
     public function create()
     {
+        $rules = (new ProposalValidation)->getRules();
+
+        if (!$this->validate($rules)) {
+            return $this->failValidationErrors($this->validator->getErrors());
+        }
+
         $inputRequest = esc($this->request->getJSON(assoc: true));
 
         $inputRequest['status']  = ProposalModel::STATUS_DRAFT;
@@ -78,6 +85,7 @@ class ProposalController extends ResourceController
             message: 'Sucesso!'
         );
     }
+
 
     /**
      * Return the editable properties of a resource object.
