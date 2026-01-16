@@ -1,6 +1,7 @@
 <?php
 
 use App\Controllers\Api\V1\CustomerController;
+use App\Controllers\Api\V1\ProposalController;
 use CodeIgniter\Router\RouteCollection;
 
 /**
@@ -11,4 +12,5 @@ $routes->get('/', 'Home::index');
 
 $routes->group('api/v1', ['namespace' => ''], static function ($routes) {
     $routes->resource('customer', ['controller' => CustomerController::class, 'except' => 'new, edit']);
+    $routes->resource('proposal', ['controller' => ProposalController::class, 'except' => 'new, edit']);
 });
